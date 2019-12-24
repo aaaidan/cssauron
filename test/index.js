@@ -6,10 +6,10 @@ language = cssauron({
     id: 'id'
   , class: 'class'
   , tag: 'tag'
-  , attr: 'attr[attr]'
+  , attr: (node, attrName) => node.attr[attrName]
   , parent: 'parent'
   , children: 'children'
-  , contents: 'contents || ""'
+  , contents: (node => node.contents || "")
 }, function(type, pattern, data) {
   if (type == 'tag') {
     return pattern.toLowerCase() == data.toLowerCase();
@@ -24,7 +24,18 @@ test('select multiple', test_select_multiple)
 test('select subject', test_select_subject)
 
 function test_select_single(assert) {
-  var data = {id: 'one-id', class: 'one-class', tag: 'one-tag', attr:{first: 'test', second:'gary busey', third:'richard-m-nixon'}, parent:null, children:[]}
+  var data = {
+    id: 'one-id',
+    class: 'one-class',
+    tag: 'one-tag',
+    attr:{
+      first: 'test',
+      second:'gary busey',
+      third:'richard-m-nixon'
+    },
+    parent:null,
+    children:[]
+  }
 
   assert.ok(language('#one-id')(data))
   assert.ok(!language('#one-id-false')(data))

@@ -10,13 +10,13 @@ function language(lookups, matchComparison) {
 }
 
 function remap(opts) {
-  for(var key in opts) if(opt_okay(opts, key)) {
-    opts[key] = Function(
-        'return function(node, attr) { return node.' + opts[key] + ' }'
-    )
-    opts[key] = opts[key]()
+  const bindable_lookup = (keyName, node) => node[keyName]
+  for(var key in opts) {
+    if(opt_okay(opts, key)) {
+      var originalValue = opts[key]
+      opts[key] = bindable_lookup.bind(undefined, originalValue)
+    }
   }
-
   return opts
 }
 
